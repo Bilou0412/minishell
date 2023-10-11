@@ -1,0 +1,17 @@
+<commande> ::= <programme> || <pipeline> || <redirection>
+
+<programme> ::= <commande-simple> | <commande-simple> <redirection>
+<commande-simple> ::= <mot> | <mot> <mot> ...
+
+<mot> ::= <lettre>+ | <chiffre>+ | <caractère-spécial>+
+<lettre> ::= [a-zA-Z]
+<chiffre> ::= [0-9]
+<caractère-spécial> ::= [!@#$%^&*()_+-={}[]|;:'",.<>?/]
+
+<pipeline> ::= <programme> | <programme> | <programme> | ...
+
+<redirection> ::= > <fichier> | >> <fichier> | <fichier> <
+
+<fichier> ::= <nom-de-fichier> | <chemin-de-fichier>
+<nom-de-fichier> ::= <mot>
+<chemin-de-fichier> ::= <mot> / <chemin-de-fichier>
