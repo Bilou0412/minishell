@@ -12,7 +12,7 @@ SRCS = 	srcs/utils.c\
 
 $(NAME) :
 	make all -C libft
-	gcc $(CFLAGS) $(SRCS) -o $(NAME)
+	gcc $(CFLAGS)  $(SRCS) -lreadline -o $(NAME)
 
 
 all : $(NAME)
