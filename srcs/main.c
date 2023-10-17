@@ -49,7 +49,7 @@ int	main(void)
 	{
 		restart = 0;
 		lex_tok = NULL;
-		str = readline("zebishell% ");
+		str = readline("zebishell> ");
 		if (str && !restart)
 		{
 			ft_tokencollector(str, &lex_tok);

@@ -60,35 +60,23 @@ t_lex_tok	*ft_lstnew(char *content)
 	else
 		new->type = other(content, last);
 	new->next = NULL;
-	last = new->type;
-	return (new);
+	return (last = new->type, new);
 }
 
-void	tokenise_single_double(char *ret, int *j)
+void	tokenise_single_double(char *ret, int *j, int *quote)
 {
 	char	c;
-	int		i;
 
-	i = 0;
 	c = ret[*j];
 	*j = *j + 1;
-	while (ret[*j])
-	{
-		if (ret[*j] == c)
-			i++;
-		if (ret[*j] == c && ft_strchr(" <>&|*$", ret[*j + 1]) && i % 2 == 1)
-		{
-			*j = *j + 1;
-			break ;
-		}
-		else if (ft_strchr("<>&|*$", ret[*j]) && i % 2 == 1)
-			break ;
-		else
-			*j = *j + 1;
-	}
+	while (ret[*j] && ret[*j] != c)
+		*j = *j + 1;
+	if (!ret[*j])
+		*quote = 0;
+	*quote = 1;
 }
 
-t_lex_tok	*ft_strtok(char *str)
+t_lex_tok	*ft_strtok(char *str, int *quote)
 {
 	char		*ret;
 	static int	i;
@@ -103,14 +91,16 @@ t_lex_tok	*ft_strtok(char *str)
 	ret = ft_strdup(str + i);
 	if (!ret)
 		return (NULL);
-	while (ret[j] && ft_strchr("<>&|*$", ret[j]))
+	while (ret[j] && ft_strchr("<>", ret[j]))
+		j++;
+	if (!j && ret[j] && ft_strchr("&|*$", ret[j]))
 		j++;
 	if (!j)
 	{
 		while (ret[j] && !ft_strchr(" <>&|*$", ret[j]))
 		{
 			if (ret[j] && ft_strchr("\'\"", ret[j]))
-				tokenise_single_double(ret, &j);
+				tokenise_single_double(ret, &j, quote);
 			else
 				j++;
 		}
@@ -122,9 +112,10 @@ void	ft_tokencollector(char *str, t_lex_tok **lex_tok)
 {
 	t_lex_tok	*new;
 	t_lex_tok	*tmp;
+	int			quote;
 
 	new = NULL;
-	new = ft_strtok(str);
+	new = ft_strtok(str, &quote);
 	while (new)
 	{
 		if (*lex_tok == NULL)
@@ -136,7 +127,8 @@ void	ft_tokencollector(char *str, t_lex_tok **lex_tok)
 				tmp = tmp->next;
 			tmp->next = new;
 		}
-		new = ft_strtok(str);
+		new->quote = quote;
+		new = ft_strtok(str, &quote);
 	}
 }
 
@@ -148,11 +140,11 @@ int	meta_error(t_lex_tok **lex_tok)
 	while (tmp->next)
 	{
 		if (tmp->type < 4 && tmp->next->type <= 4)
-			return (-1);
-		else if (tmp->type == PIPE && tmp->next->type == PIPE)
-			return (-1);
-		else if (tmp->type == INDEFINE)
-			return (-1);
+			return (printf("1"), -1);
+		if (tmp->type == PIPE && tmp->next->type == PIPE)
+			return (printf("2"), -1);
+		else if (tmp->type == INDEFINE || tmp->next->type == INDEFINE)
+			return (printf("3"), -1);
 		tmp = tmp->next;
 	}
 	return (0);

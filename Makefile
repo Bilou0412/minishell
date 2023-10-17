@@ -1,28 +1,32 @@
-NAME = parser
+NAME		=	minishell
 
-CC = gcc
+HEADER		=	inc/
 
-CFLAGS = -g -Werror -Wall -Wextra 
+LIBFT		=	libft/libft.a
 
-RM = rm -rf
+CC			=	gcc
 
-SRCS = 	srcs/utils.c\
-		srcs/main.c\
-		libft/libft.a\
+CFLAGS		=	-Werror -Wall -Wextra -g -I $(HEADER)  #-fsanitize=address
 
-$(NAME) :
-	make all -C libft
-	gcc $(CFLAGS)  $(SRCS) -lreadline -o $(NAME)
+SRCS		=	srcs/main.c \
+				srcs/utils.c \
 
+OBJS		=	$(SRCS:.c=.o)
 
-all : $(NAME)
+all			:	$(NAME)
 
-fclean : clean
-	$(RM) $(NAME)
-	make fclean -C libft
+$(NAME)		:	$(OBJS) $(LIBFT) $(HEADER)
+				$(CC) $(CFLAGS) $(OBJS) -lreadline -o  $(NAME) $(LIBFT)
 
-clean :
-	$(RM) $(NAME)
-	make clean -C libft
+$(LIBFT)	:
+				make -C ./libft
 
-re : fclean all
+clean		:
+				rm -rf $(OBJS)
+				make clean -C ./libft
+
+fclean		:	clean
+				rm $(NAME)
+				make fclean -C ./libft
+
+re			:	fclean all
