@@ -25,7 +25,7 @@ void	print_lex_info(t_lex_tok *lex_tok)
 		else if (lex_tok->type == 6)
 			ft_printf("ERRORL\n");
 		else if (lex_tok->type == 7)
-			ft_printf("DOLLArs\n");
+			ft_printf("DOLLARS\n");
 		else if (lex_tok->type == 8)
 			ft_printf("LIMITER\n");
 		else if (lex_tok->type == 9)

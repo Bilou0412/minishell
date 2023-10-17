@@ -1,9 +1,0 @@
-si tab[0] == | 
-    error
-si tab[dernier] == > >> < << |
-    error
-si tab[i] == > >> < << ET tab[i + 1] == | > >> < <<
-    error
-si tab[i] == | et tab[i + 1] == |
-    error
-
