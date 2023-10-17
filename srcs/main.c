@@ -41,18 +41,16 @@ void	print_lex_info(t_lex_tok *lex_tok)
 
 int	main(void)
 {
-	char *str;
-	int restart;
 	t_lex_tok *lex_tok;
+	char *str;
 
 	while (1)
 	{
-		restart = 0;
 		lex_tok = NULL;
 		str = readline("zebishell> ");
-		if (str && !restart)
+		if (str)
 		{
-			ft_tokencollector(str, &lex_tok);
+			token_maker(str, &lex_tok);
 			if (error_handler(&lex_tok))
 				ft_printf("error\n");
 			else
