@@ -40,3 +40,5 @@ int						token_maker(char *str, t_lex_tok **lex_tok);
 int						assign_type(char *content, int tok_index);
 int						free_struc(t_lex_tok *lex_tok);
 int						error_quote(char *content);
+int						echo(char *option, char *string);
+int						mini_exec(t_lex_tok **lex_tok);
