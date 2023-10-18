@@ -1,17 +1,24 @@
 #include "../inc/minishell.h"
 
-int	free_struc(t_lex_tok *lex_tok)
+int	error_quote(char *content)
 {
-	t_lex_tok	*tmp;
+	char	c;
+	int		error;
 
-	while (lex_tok)
+	error = 0;
+	c = 0;
+	while (*content)
 	{
-		tmp = lex_tok->next;
-		free(lex_tok->token);
-		free(lex_tok);
-		lex_tok = tmp;
+		if (ft_strchr("\'\"", *content) && c == 0)
+		{
+			c = *content;
+			error++;
+		}
+		else if (c != '\0' && c == *content)
+			error++;
+		content++;
 	}
-	return (0);
+	return (error % 2);
 }
 
 int	meta_error(t_lex_tok **lex_tok)

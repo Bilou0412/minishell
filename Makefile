@@ -9,8 +9,10 @@ CC			=	gcc
 CFLAGS		=	-Werror -Wall -Wextra -g -I $(HEADER)  #-fsanitize=address
 
 SRCS		=	srcs/main.c \
-				srcs/utils.c \
+				srcs/list_utils.c \
+				srcs/error.c \
 				srcs/token_maker.c \
+				srcs/free.c \
 
 OBJS		=	$(SRCS:.c=.o)
 

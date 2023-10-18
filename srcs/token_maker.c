@@ -1,6 +1,6 @@
 #include "../inc/minishell.h"
 
-int	tokenise_single_double(char *ret, int *j)
+void	tokenise_single_double(char *ret, int *j)
 {
 	char	c;
 
@@ -9,18 +9,11 @@ int	tokenise_single_double(char *ret, int *j)
 	while (ret[*j] && ret[*j] != c)
 		*j = *j + 1;
 	if (!ret[*j])
-		return (1);
-	return (*j = *j + 1, 0);
+		return ;
+	*j = *j + 1;
+	return ;
 }
-t_lex_tok	*get_last(t_lex_tok **lex_tok)
-{
-	t_lex_tok	*tmp;
 
-	tmp = *lex_tok;
-	while (tmp->next)
-		tmp = tmp->next;
-	return (tmp);
-}
 char	*ft_strtok(char *str, int *error)
 {
 	char		*ret;
@@ -36,9 +29,9 @@ char	*ft_strtok(char *str, int *error)
 	ret = ft_strdup(str + i);
 	if (!ret)
 		return (*error = 1, NULL);
-	while (ret[j] && ft_strchr("<>$?", ret[j]))
-		j++;
-	if (!j && ret[j] && ft_strchr("&|*$", ret[j]))
+	if (ret[j] == '|')
+		return (i++, ret[1] = '\0', ret);
+	while (ret[j] && ft_strchr("<>$?|", ret[j]))
 		j++;
 	if (!j)
 	{
@@ -81,34 +74,7 @@ int	assign_type(char *content, int tok_index)
 		return (befor_type = WORD, WORD);
 	return (befor_type = WORD, WORD);
 }
-t_lex_tok	*ft_lstnew(char *content, int tok_index)
-{
-	t_lex_tok	*new;
 
-	new = (t_lex_tok *)ft_calloc(1, sizeof(*new));
-	if (!new)
-		return (NULL);
-	new->token = content;
-	new->type = assign_type(content, tok_index);
-	new->next = NULL;
-	return (new);
-}
-
-void	ft_lstadd_back(t_lex_tok **lex_tok, t_lex_tok *new)
-{
-	t_lex_tok	*tmp;
-
-	if (lex_tok)
-	{
-		if (*lex_tok == NULL)
-			*lex_tok = new;
-		else
-		{
-			tmp = get_last(lex_tok);
-			tmp->next = new;
-		}
-	}
-}
 int	token_maker(char *str, t_lex_tok **lex_tok)
 {
 	char *content;
