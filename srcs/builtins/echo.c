@@ -23,60 +23,55 @@ void	print_for_echo(char *str_to_print)
 		}
 	}
 }
-int	check_echo_option(char *option)
+char	*check_echo_option(char *option, char *string)
 {
-	int	i;
+	int		i;
+	char	*str_to_print;
+	char	*tmp;
 
 	i = 0;
-	if (!ft_strncmp("-n", option, 2))
+	if (*option && !ft_strncmp("-n", option, 2))
 	{
 		i = i + 2;
 		while (option[i] == 'n')
 			i++;
 		if (option[i] == '\0')
-			return (0);
-		else if (ft_strncmp(option + i, " - ", 3))
-			return (0);
-		else
-			return (1);
+			return (ft_strdup(string));
+		else if (option[i] == ' ')
+		{
+			i++;
+			return (ft_strjoin(option + i, string));
+		}
 	}
-	return (1);
+	if (*option)
+	{
+		str_to_print = ft_strjoin(option, " ");
+		if (!str_to_print)
+			return (NULL);
+		tmp = ft_strjoin(str_to_print, string);
+		free(str_to_print);
+		if (!tmp)
+			return (NULL);
+		str_to_print = ft_strjoin(tmp, "\n");
+		free(tmp);
+		if (!str_to_print)
+			return (NULL);
+		return (str_to_print);
+	}
+	return (ft_strjoin(string, "\n"));
 }
 int	echo(char *option, char *string)
 {
 	char *str_to_print;
 
-	str_to_print = NULL;
-	if (option == NULL && string == NULL)
-		ft_putchar_fd('\n', 1);
-	else if (!option)
-	{
-		print_for_echo(string);
-		ft_putchar_fd('\n', 1);
-	}
-	else if (!string)
-	{
-		if(!check_echo_option(option))
-	}
-	else if (!check_echo_option(option))
-		print_for_echo(string);
-	else if (check_echo_option(option) == 1)
-	{
-		str_to_print = ft_strjoin(option, string);
-		if (!str_to_print)
-			return (0);
-		print_for_echo(str_to_print);
-		ft_putchar_fd('\n', 1);
-	}
-	else if (check_echo_option(option) == 2)
-	{
-		str_to_print = ft_strjoin(option, string);
-		if (!str_to_print)
-			return (0);
-		print_for_echo(str_to_print + 2);
-		ft_putchar_fd('\n', 1);
-	}
-	if (str_to_print)
-		free(str_to_print);
-	return (0);
+	if (!option && !string)
+		return (ft_putchar_fd('\n', 1), 0);
+	else if (string && !option)
+		return (print_for_echo(string), ft_putchar_fd('\n', 1), 0);
+	else if (!string && !ft_strncmp("-n", option, 3))
+		return (0);
+	else
+		str_to_print = check_echo_option(option, string);
+	print_for_echo(str_to_print);
+	return (free(str_to_print), 0);
 }

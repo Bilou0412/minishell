@@ -44,11 +44,12 @@ int	main(void)
 	t_lex_tok *lex_tok;
 	char *str;
 
+	str = NULL;
 	while (1)
 	{
 		lex_tok = NULL;
 		str = readline("zebishell> ");
-		if (str)
+		if (*str)
 		{
 			token_maker(str, &lex_tok);
 			if (error_handler(&lex_tok))
@@ -56,9 +57,13 @@ int	main(void)
 			else
 			{
 				mini_exec(&lex_tok);
-				free_struc(lex_tok);
+				if (lex_tok)
+					free_struc(lex_tok);
 			}
-			free(str);
+			if (str)
+				free(str);
 		}
+		else
+			free(str);
 	}
 }
